@@ -116,19 +116,20 @@ fi
 echo "Calculating optimal AUC threshold: $(date)"
 
 path=`dirname $0`
+tempfile_path=`pwd`
 if [[ -f $2 ]] && [[ $norm == "norm" ]]
 then
 	echo "Calculating threshold using normalized control: $(date)"
-	Rscript $path/SEACR_1.3.R --exp=$password.auc --ctrl=$password2.auc --norm=yes --output=$password
+	Rscript $path/SEACR_1.3.R --exp="$tempfile_path/$password.auc" --ctrl="$tempfile_path/$password2.auc" --norm=yes --output="$tempfile_path/$password"
 elif [[ -f $2 ]]
 then
 	echo "Calculating threshold using non-normalized control: $(date)"
-	Rscript $path/SEACR_1.3.R --exp=$password.auc --ctrl=$password2.auc --norm=no --output=$password
+	Rscript $path/SEACR_1.3.R --exp="$tempfile_path/$password.auc" --ctrl="$tempfile_path/$password2.auc" --norm=no --output="$tempfile_path/$password"
 else
 	echo "Using user-provided threshold: $(date)"
-	Rscript $path/SEACR_1.3.R --exp=$password.auc --ctrl=$2 --norm=no --output=$password
+	Rscript $path/SEACR_1.3.R --exp="$tempfile_path/$password.auc" --ctrl=$2 --norm=no --output=$tempfile_path/$password
 fi
-	
+
 fdr=`cat $password.fdr.txt | sed -n '1p'`			## Added 5/15/19 for SEACR_1.1
 fdr2=`cat $password.fdr.txt | sed -n '2p'`			## Added 5/15/19 for SEACR_1.1
 
